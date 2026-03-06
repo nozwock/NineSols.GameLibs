@@ -108,7 +108,7 @@ def build_version(
         dotnet_build(version, configuration)
 
 
-@cli.command(no_args_is_help=True)
+@cli.command()
 def build_all(configuration: CliConfigurationType = CliConfiguration) -> None:
     for version in (it for it in VERSIONS_DIR.iterdir() if it.is_dir()):
         dotnet_build(version.name, configuration)
@@ -116,7 +116,6 @@ def build_all(configuration: CliConfigurationType = CliConfiguration) -> None:
 
 def main() -> None:
     VERSIONS_DIR.mkdir(parents=True, exist_ok=True)
-
     cli()
 
 

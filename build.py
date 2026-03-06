@@ -242,9 +242,6 @@ def publish_github_releases(nupkgs: Iterable[Path]) -> None:
 @cli.command()
 def publish_all(
     source: Literal["Github Release", "Github NuGet"] = typer.Argument("Github NuGet"),
-    configuration: CliConfigurationType = typer.Option(
-        "Release", "-c", "--configuration"
-    ),
     clean: bool = typer.Option(True, "--clean/--no-clean", help="Clean *.nupkg before publish"),
     force: bool = typer.Option(False, "-f", "--force", help="Disable sanity checks"),
 ) -> None:
@@ -296,6 +293,8 @@ def publish_all(
         )
 
     disable_github_cli_prompt()
+
+    configuration = "Release"
 
     build_dir = Path("bin") / configuration
     if clean and build_dir.is_dir():

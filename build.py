@@ -245,6 +245,7 @@ def publish_all(
     configuration: CliConfigurationType = typer.Option(
         "Release", "-c", "--configuration"
     ),
+    clean: bool = typer.Option(True, "--clean/--no-clean", help="Clean *.nupkg before publish"),
     force: bool = typer.Option(False, "-f", "--force", help="Disable sanity checks"),
 ) -> None:
     """
@@ -296,9 +297,13 @@ def publish_all(
 
     disable_github_cli_prompt()
 
-    build_all(configuration)
-
     build_dir = Path("bin") / configuration
+    if clean and build_dir.is_dir():
+        print(f'Cleaning *.nupkg from "{build_dir}"')
+        for nupkg in build_dir.glob("*.nupkg", case_sensitive=False):
+            nupkg.unlink()
+
+    build_all(configuration)
     assert build_dir.is_dir()
 
     nupkgs = build_dir.glob("*.nupkg", case_sensitive=False)

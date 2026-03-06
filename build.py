@@ -13,6 +13,7 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
+from sys import exit
 from typing import Any, Iterable, Literal, cast
 
 import dotenv

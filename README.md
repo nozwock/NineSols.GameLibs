@@ -4,4 +4,4 @@ Bundler Nuget package for Nine Sols game libraries. Strips and publicizes game l
 
 ## Links
 - [Silksong.GameLibs](https://github.com/silksong-modding/Silksong.GameLibs) - used as reference
-
+- [nine-sols-modding/libs-stripped](https://github.com/nine-sols-modding/libs-stripped/)

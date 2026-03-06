@@ -139,7 +139,50 @@ def publish_all(
     configuration: CliConfigurationType = typer.Option(
         "Release", "-c", "--configuration"
     ),
+    force: bool = typer.Option(False, "-f", "--force", help="Disable sanity checks"),
 ) -> None:
+    if not force:
+        if (
+            branch := subprocess.run(
+                ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+                check=True,
+                text=True,
+                encoding="utf-8",
+                stdout=subprocess.PIPE,
+            ).stdout.strip()
+        ) != "main":
+            print(
+                f"Error: You must be on the main branch to publish. Current branch: {branch}"
+            )
+            exit(1)
+
+        if subprocess.run(
+            ["git", "status", "--porcelain"],
+            check=True,
+            text=True,
+            encoding="utf-8",
+            stdout=subprocess.PIPE,
+        ).stdout.strip():
+            print(
+                "Error: You have uncommitted changes. Please commit or stash them before publishing."
+            )
+            exit(1)
+
+        if (
+            subprocess.run(
+                ["git", "diff", "--quiet", "HEAD", "origin/main"],
+            ).returncode
+            != 0
+        ):
+            print(
+                "Error: Local main branch is not up to date with origin/main. Please pull first."
+            )
+            exit(1)
+
+        print(
+            "On main branch, up to date with origin/main, and no uncommitted changes."
+        )
+
     GITHUB_RELEASE_TAG = "nuget-packages"
 
     disable_github_cli_prompt()
